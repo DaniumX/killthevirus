@@ -1,0 +1,32 @@
+{
+  "name": "killthevirus",
+  "version": "1.0.0",
+  "description": "A game where the fastest reaction time wins.",
+  "main": "index.js",
+  "scripts": {
+    "start": "node ./bin/server.js",
+    "dev": "cross-env DEBUG=chat:* nodemon ./bin/server.js",
+    "debug": "cross-env DEBUG=chat:*,socket.io:client,socket.io:server nodemon --inspect ./bin/server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/DaniumX/killthevirus.git"
+  },
+  "author": "Daniel, Tobias and Adi",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/DaniumX/killthevirus/issues"
+  },
+  "homepage": "https://github.com/DaniumX/killthevirus#readme",
+  "dependencies": {
+    "cors": "^2.8.5",
+    "debug": "^4.3.3",
+    "dotenv": "^16.0.0",
+    "express": "^4.17.3",
+    "morgan": "^1.10.0",
+    "socket.io": "^4.4.1"
+  },
+  "devDependencies": {
+    "cross-env": "^7.0.3"
+  }
+}
