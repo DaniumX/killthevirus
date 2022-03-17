@@ -20,6 +20,11 @@ const rooms = [
   },
 ];
 
+const x_coordinates = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 16, 20];
+const y_coordinates = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 16, 20];
+
+const startGame = function () {};
+
 module.exports = function (socket, _io) {
   io = _io;
 

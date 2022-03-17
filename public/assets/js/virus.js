@@ -97,7 +97,7 @@ socket.on("user:disconnected", (user) => {
   var audio = new Audio("/assets/sounds/leave.ogg");
   audio.play();
   Toastify({
-    text: `${user} left`,
+    text: `${user.username} left`,
     duration: 3000,
     destination: "https://github.com/apvarun/toastify-js",
     newWindow: true,
