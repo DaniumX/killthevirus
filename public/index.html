@@ -141,7 +141,7 @@
     </div>
     <div
       id="game"
-      class="flex items-center justify-center w-full h-full hidden border-2"
+      class="flex items-center justify-center w-full h-full hidden"
     >
       <div class="flex justify-center w-full h-5/6 space-x-1">
         <div
@@ -160,16 +160,30 @@
             alt=""
           />
         </div>
-        <div
-          id="game-info"
-          class="h-3/6 w-2/12 bg-white shadow-md flex flex-col items-center"
-        >
-          <p class="font-bold text-2xl">Info</p>
-          <div class="mt-4">
-            <p class="font-bold">
-              Status:
-              <span class="font-medium" id="status">Waiting for player</span>
-            </p>
+        <div class="w-2/12 space-y-1 flex flex-col">
+          <div
+            id="game-info"
+            class="grow w-full bg-white shadow-md flex flex-col items-center"
+          >
+            <p class="font-bold text-2xl">Info</p>
+            <div class="mt-4">
+              <p class="font-bold">
+                Status:
+                <span class="font-medium" id="status">Waiting for player</span>
+              </p>
+            </div>
+          </div>
+          <div
+            id="game-logs"
+            class="grow w-full bg-white shadow-md flex flex-col items-center"
+          >
+            <p class="font-bold text-2xl">Logs</p>
+            <div class="mt-4">
+              <p class="font-bold">
+                Status:
+                <span class="font-medium" id="status">Waiting for player</span>
+              </p>
+            </div>
           </div>
         </div>
       </div>
