@@ -82,6 +82,7 @@ roomsWrapper.addEventListener("DOMSubtreeModified", () => {
         console.log("Server acknowledged that user joined", status);
 
         if (status.success) {
+          console.log(status);
           joinedRoom = status.id;
           lobbyView.classList.toggle("hidden");
           gameView.classList.toggle("hidden");
@@ -183,10 +184,10 @@ socket.on("virus:location", (location) => {
     stop = new Date();
     let reactionTime = stop - start;
     console.log("reaction time was", reactionTime);
-
+    console.log(joinedRoom);
     socket.emit(
       "virus:clicked",
-      { username, roomId: "room1", reactionTime },
+      { username, roomId: joinedRoom, reactionTime },
       (status) => {
         console.log(status);
         if (status.won) {

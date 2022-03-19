@@ -172,6 +172,7 @@ module.exports = function (socket, _io) {
       success: true,
       roomName: room.name,
       users: room.users,
+      id: room.id,
     });
 
     // broadcast to all users in room that someone connected
