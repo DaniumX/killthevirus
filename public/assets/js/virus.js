@@ -121,7 +121,7 @@ socket.on("room:status", (roomStatus) => {
 });
 
 //for demo purposes, to be removed
-document.querySelector("#virus").addEventListener("click", () => {
+document.querySelector('#virus').addEventListener("click", () => {
   if (Math.random() >= 0.5 ? 1 : 0) {
     var audio = new Audio("/assets/sounds/win.ogg");
     audio.play();
