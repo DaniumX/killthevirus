@@ -3,20 +3,26 @@ const rooms = [
   {
     id: "room1",
     name: "Room 1",
+    meta: {},
     users: {},
     status: "Waiting for player",
+    round: 0,
   },
   {
     id: "room2",
     name: "Room 2",
+    meta: {},
     users: {},
     status: "Waiting for player",
+    round: 0,
   },
   {
     id: "room3",
     name: "Room 3",
+    meta: {},
     users: {},
     status: "Waiting for player",
+    round: 0,
   },
 ];
 
