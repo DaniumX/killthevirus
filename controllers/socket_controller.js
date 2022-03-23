@@ -26,6 +26,16 @@ const rooms = [
   },
 ];
 
+const sleep = (t) => new Promise((s) => setTimeout(s, t));
+function getHighestField(objArray, fieldName) {
+  return Number(
+    Math.max.apply(
+      Math,
+      objArray?.map((o) => o)
+    ) || 0
+  );
+}
+
 const x_coordinates = [
   1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 16, 20, 24, 28, 32, 36, 40, 44,
   48, 52, 56, 60, 64, 72, 80, 96,
