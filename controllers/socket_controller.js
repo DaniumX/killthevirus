@@ -45,7 +45,11 @@ const y_coordinates = [
   48, 52, 56, 60, 64, 72, 80, 96,
 ];
 
-const startGame = function () {};
+const startGame = async function (roomId, socket) {
+  const room = rooms.find((chatroom) => chatroom.id === roomId);
+  room.status = "Calculating coordinates...";
+  io.sockets.in(room.id).emit("room:status", room.status);
+};
 
 module.exports = function (socket, _io) {
   io = _io;
