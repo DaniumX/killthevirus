@@ -58,6 +58,9 @@ const startGame = async function (roomId, socket) {
   await sleep(Math.round(Math.random() * 10) * 1000);
   let virusLocation = [x_coordinate, y_coordinate];
   io.sockets.in(room.id).emit("virus:location", virusLocation);
+
+  room.status = "Click the virus!";
+  io.sockets.in(room.id).emit("room:status", room.status);
 };
 
 module.exports = function (socket, _io) {
