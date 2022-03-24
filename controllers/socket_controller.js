@@ -69,6 +69,7 @@ module.exports = function (socket, _io) {
   debug("a new client has connected", socket.id);
 
   io.emit("new-connection", "A new user connected");
+  io.emit("rooms:status", rooms);
 
   //   handle user disconnect
   socket.on("disconnect", async function (e, callback) {
@@ -80,8 +81,75 @@ module.exports = function (socket, _io) {
       return;
     }
     this.broadcast.to(room.id).emit("user:disconnected", room.users[this.id]);
+    io.emit("rooms:status", rooms);
     delete room.users[this.id];
     this.broadcast.to(room.id).emit("user:list", room.users);
+  });
+
+  let count = 0;
+  socket.on("virus:clicked", async function (e, callback) {
+    const room = rooms.find((chatroom) => chatroom.id === e.roomId);
+    console.log(room);
+    room.meta[e.username] = {};
+    room.meta[e.username].reactionTime = e.reactionTime;
+    count++;
+    console.log(room.meta);
+
+    if (Object.keys(room.meta).length === 1) {
+      console.log(room.users);
+      room.users[this.id].score = room.users[this.id].score + 10;
+      io.sockets
+        .in(room.id)
+        .emit(
+          "game:logs",
+          `${room.users[this.id].username} won round ${
+            room.round
+          } with a reaction time of ${room.meta[e.username].reactionTime}ms`
+        );
+
+      callback({ won: true });
+    } else {
+      io.sockets
+        .in(room.id)
+        .emit(
+          "game:logs",
+          `${room.users[this.id].username} lost round ${
+            room.round
+          } with a reaction time of ${room.meta[e.username].reactionTime}ms`
+        );
+      callback({ won: false });
+      room.round = room.round + 1;
+      await sleep(2000);
+
+      if (room.round === 11) {
+        let highestScore = 0;
+        let winner;
+        Object.entries(room.users).forEach((user) => {
+          if (user[1].score > highestScore) {
+            highestScore = user[1].score;
+            winner = user[1];
+          }
+        });
+        console.log("the winner is", winner);
+        room.status = `Game finished. ${winner.username} won. Refresh to play again.`;
+        io.sockets.in(room.id).emit("room:status", room.status);
+        room.meta = {};
+        room.users = {};
+        room.status = "Waiting for player";
+        room.round = 0;
+        io.emit("rooms:status", rooms);
+        return;
+      }
+
+      room.status = "Starting new round...";
+      io.sockets.in(room.id).emit("room:status", room.status);
+      io.sockets.in(room.id).emit("game:round", room.round);
+      await sleep(1000);
+      room.meta = [];
+      startGame(room.id, socket);
+    }
+
+    io.sockets.in(room.id).emit("user:list", room.users);
   });
 
   //   handle user joined
@@ -93,10 +161,10 @@ module.exports = function (socket, _io) {
     const room = rooms.find((chatroom) => chatroom.id === e.roomId);
     room.users[this.id] = {};
     room.users[this.id].username = e.username;
-    room.users[this.id].points = 0;
+    room.users[this.id].score = 0;
 
     if (Object.keys(room.users).length > 1) {
-      room.status = "Starting game";
+      startGame(room.id, socket);
     }
     debug("users object length " + Object.keys(room.users).length);
 
@@ -104,6 +172,7 @@ module.exports = function (socket, _io) {
       success: true,
       roomName: room.name,
       users: room.users,
+      id: room.id,
     });
 
     // broadcast to all users in room that someone connected
@@ -114,6 +183,9 @@ module.exports = function (socket, _io) {
 
     // broadcast current room status
     io.sockets.in(room.id).emit("room:status", room.status);
+
+    // broadcast all rooms to EVERYONE
+    io.emit("rooms:status", rooms);
   });
 
   // handle user emitting a new message
