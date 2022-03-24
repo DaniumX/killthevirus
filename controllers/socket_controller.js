@@ -3,27 +3,65 @@ const rooms = [
   {
     id: "room1",
     name: "Room 1",
+    meta: {},
     users: {},
     status: "Waiting for player",
+    round: 0,
   },
   {
     id: "room2",
     name: "Room 2",
+    meta: {},
     users: {},
     status: "Waiting for player",
+    round: 0,
   },
   {
     id: "room3",
     name: "Room 3",
+    meta: {},
     users: {},
     status: "Waiting for player",
+    round: 0,
   },
 ];
 
-const x_coordinates = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 16, 20];
-const y_coordinates = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 16, 20];
+const sleep = (t) => new Promise((s) => setTimeout(s, t));
+function getHighestField(objArray, fieldName) {
+  return Number(
+    Math.max.apply(
+      Math,
+      objArray?.map((o) => o)
+    ) || 0
+  );
+}
 
-const startGame = function () {};
+const x_coordinates = [
+  1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 16, 20, 24, 28, 32, 36, 40, 44,
+  48, 52, 56, 60, 64, 72, 80, 96,
+];
+const y_coordinates = [
+  1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 16, 20, 24, 28, 32, 36, 40, 44,
+  48, 52, 56, 60, 64, 72, 80, 96,
+];
+
+const startGame = async function (roomId, socket) {
+  const room = rooms.find((chatroom) => chatroom.id === roomId);
+  room.status = "Calculating coordinates...";
+  io.sockets.in(room.id).emit("room:status", room.status);
+
+  let x_coordinate =
+    x_coordinates[Math.floor(Math.random() * x_coordinates.length)];
+  let y_coordinate =
+    y_coordinates[Math.floor(Math.random() * x_coordinates.length)];
+
+  await sleep(Math.round(Math.random() * 10) * 1000);
+  let virusLocation = [x_coordinate, y_coordinate];
+  io.sockets.in(room.id).emit("virus:location", virusLocation);
+
+  room.status = "Click the virus!";
+  io.sockets.in(room.id).emit("room:status", room.status);
+};
 
 module.exports = function (socket, _io) {
   io = _io;
