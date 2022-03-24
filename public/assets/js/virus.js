@@ -14,6 +14,19 @@ let username;
 let rooms;
 let joinedRoom = null;
 
+var totalSeconds = 0;
+function countTimer() {
+  ++totalSeconds;
+  var hour = Math.floor(totalSeconds / 3600);
+  var minute = Math.floor((totalSeconds - hour * 3600) / 60);
+  var seconds = totalSeconds - (hour * 3600 + minute * 60);
+  if (hour < 10) hour = "0" + hour;
+  if (minute < 10) minute = "0" + minute;
+  if (seconds < 10) seconds = "0" + seconds;
+  document.getElementById("timer").innerHTML =
+    hour + ":" + minute + ":" + seconds;
+}
+
 const updateUserList = (users) => {
   playersList.innerHTML = Object.values(users)
     .map(
@@ -167,7 +180,14 @@ socket.on("room:status", (roomStatus) => {
 // });
 
 socket.on("virus:location", (location) => {
+  // countTimer();
   let start = new Date();
+  var now = new Date();
+  let timerVar = setInterval(() => {
+    now = new Date();
+    document.getElementById("timer").innerHTML =
+      now.getTime() - start.getTime() + " ms";
+  }, 10);
   let stop;
   console.log("virus:location event received");
   console.log(location);
@@ -183,6 +203,8 @@ socket.on("virus:location", (location) => {
   document.querySelector("#virus").addEventListener("click", () => {
     stop = new Date();
     let reactionTime = stop - start;
+    clearInterval(timerVar);
+    document.getElementById("timer").innerHTML = reactionTime + " ms";
     console.log("reaction time was", reactionTime);
     console.log(joinedRoom);
     socket.emit(
@@ -197,6 +219,9 @@ socket.on("virus:location", (location) => {
           var audio = new Audio("/assets/sounds/lose.ogg");
           audio.play();
         }
+        setTimeout(() => {
+          document.getElementById("timer").innerHTML = "0 ms";
+        }, 2000);
         document.querySelector("#virus").remove();
       }
     );
